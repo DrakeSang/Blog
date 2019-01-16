@@ -2,6 +2,7 @@
 
 namespace BlogBundle\Controller;
 
+use BlogBundle\Entity\Article;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,6 +15,9 @@ class DefaultController extends Controller
     public function indexAction()
     {
         // replace this example code with whatever you need
-        return $this->render('default/index.html.twig');
+        $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
+
+        return $this->render('default/index.html.twig',
+            ['articles' => $articles]);
     }
 }

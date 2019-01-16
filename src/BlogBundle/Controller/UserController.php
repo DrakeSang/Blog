@@ -4,6 +4,7 @@ namespace BlogBundle\Controller;
 
 use BlogBundle\Entity\User;
 use BlogBundle\Form\UserType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,6 +39,7 @@ class UserController extends Controller
 
     /**
      * @Route("/profile", name="user_profile")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function profile()
     {

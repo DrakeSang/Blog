@@ -170,7 +170,7 @@ class Article
         $this->summary = substr(
             $this->getContent(),
             0,
-            strlen($this->getContent() / 2))
+            strlen($this->getContent()) / 2)
             . "...";
     }
 
