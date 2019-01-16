@@ -972,45 +972,94 @@
       <Charset>utf8mb4</Charset>
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
-    <table id="245" parent="9" name="users">
+    <table id="245" parent="9" name="articles">
       <Collation>utf8_unicode_ci</Collation>
     </table>
-    <column id="246" parent="245" name="id">
+    <table id="246" parent="9" name="users">
+      <Collation>utf8_unicode_ci</Collation>
+    </table>
+    <column id="247" parent="245" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="247" parent="245" name="email">
+    <column id="248" parent="245" name="title">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="248" parent="245" name="password">
+    <column id="249" parent="245" name="content">
+      <Position>3</Position>
+      <DataType>longtext|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="250" parent="245" name="dateAdded">
+      <Position>4</Position>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="251" parent="245" name="authorId">
+      <Position>5</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="252" parent="245" name="IDX_BFDD3168A196F9FD">
+      <ColNames>authorId</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="253" parent="245" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="254" parent="245" name="FK_BFDD3168A196F9FD">
+      <ColNames>authorId</ColNames>
+      <RefSchemaName>symfony_blog_exercise</RefSchemaName>
+      <RefTableName>users</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="255" parent="246" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="256" parent="246" name="email">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="257" parent="246" name="password">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="249" parent="245" name="fullName">
+    <column id="258" parent="246" name="fullName">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="250" parent="245" name="UNIQ_1483A5E9E7927C74">
+    <index id="259" parent="246" name="UNIQ_1483A5E9E7927C74">
       <ColNames>email</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <key id="251" parent="245" name="PRIMARY">
+    <key id="260" parent="246" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="252" parent="245" name="UNIQ_1483A5E9E7927C74">
+    <key id="261" parent="246" name="UNIQ_1483A5E9E7927C74">
       <ColNames>email</ColNames>
       <UnderlyingIndexName>UNIQ_1483A5E9E7927C74</UnderlyingIndexName>
     </key>

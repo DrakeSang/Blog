@@ -2,6 +2,7 @@
 
 namespace BlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -43,6 +44,17 @@ class User implements UserInterface
      */
     private $fullName;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Article", mappedBy="author")
+     */
+    private $articles;
+
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -124,6 +136,26 @@ class User implements UserInterface
     public function getFullName()
     {
         return $this->fullName;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getArticles()
+    {
+        return $this->articles;
+    }
+
+    /**
+     * @param Article $article
+     *
+     * @return User
+     */
+    public function addPost(Article $article)
+    {
+        $this->articles[] = $article;
+
+        return $this;
     }
 
     /**
