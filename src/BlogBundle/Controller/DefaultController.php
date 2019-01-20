@@ -15,7 +15,10 @@ class DefaultController extends Controller
     public function indexAction()
     {
         // replace this example code with whatever you need
-        $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
+        $articles = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->findAll();
 
         return $this->render('default/index.html.twig',
             ['articles' => $articles]);

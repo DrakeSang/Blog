@@ -29,7 +29,9 @@ class ArticleController extends Controller
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            /** @var User $currentUser */
             $currentUser = $this->getUser();
+
             $article->setAuthor($currentUser);
             $currentUser->addPost($article);
 
@@ -150,5 +152,23 @@ class ArticleController extends Controller
         return $this->render('article/delete.html.twig',
             array('article' => $article,
                 'form' => $form->createView()));
+    }
+
+    /**
+     * @Route("/myArticles", name="myArticles")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function myArticles()
+    {
+        $userId = $this->getUser()->getId();
+
+        /** @var Article $articles */
+        $articles = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->findBy(['authorId' => $userId]);
+
+        return $this->render("article/myArticles.html.twig",
+            array('articles' => $articles));
     }
 }
