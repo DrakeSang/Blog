@@ -24,17 +24,30 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if($form->isSubmitted()) {
+            $email = $form->getData()->getEmail();
+
+            $userDB = $this
+                ->getDoctrine()
+                ->getRepository(User::class)
+                ->findBy(['email' => $email]);
+
+            if(count($userDB) > 0) {
+                $this->addFlash('info', "Username with email " . $email . " already taken!");
+
+                return $this->render('user/register.html.twig');
+            }
+
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPassword());
 
             /** @var Role $role */
             $role = $this
-                ->getDoctrine()
-                ->getRepository(Role::class)
-                ->findOneBy(['name' => 'ROLE_USER']);
+                    ->getDoctrine()
+                    ->getRepository(Role::class)
+                    ->findOneBy(['name' => 'ROLE_USER']);
 
-            $user->addRole($role);
             $user->setPassword($password);
+            $user->addRole($role);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
