@@ -55,10 +55,18 @@ class ArticleController extends Controller
      */
     public function viewArticle($id)
     {
+
+        /** @var Article $article */
         $article = $this
             ->getDoctrine()
             ->getRepository(Article::class)
             ->find($id);
+
+        $article->setViewCount($article->getViewCount() + 1);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($article);
+        $em->flush();
 
         return  $this->render("article/details.html.twig",
             ['article' => $article]);
