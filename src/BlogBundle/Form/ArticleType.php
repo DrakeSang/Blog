@@ -16,8 +16,11 @@ class ArticleType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('content', TextType::class);
-    }/**
+            ->add('content', TextType::class)
+            ->add('imageUrl',TextType::class);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)

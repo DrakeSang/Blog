@@ -63,12 +63,27 @@ class Article
     private $author;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="imageUrl", type="text", nullable=false)
+     */
+    private $imageUrl;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="viewCount", type="integer")
+     */
+    private $viewCount;
+
+    /**
      * Article constructor.
      * @throws \Exception
      */
     public function __construct()
     {
         $this->dateAdded = new \DateTime('now');
+        $this->viewCount = 0;
     }
 
     /**
@@ -212,6 +227,38 @@ class Article
         $this->author = $author;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return $this->imageUrl;
+    }
+
+    /**
+     * @param string $imageUrl
+     */
+    public function setImageUrl($imageUrl)
+    {
+        $this->imageUrl = $imageUrl;
+    }
+
+    /**
+     * @return int
+     */
+    public function getViewCount()
+    {
+        return $this->viewCount;
+    }
+
+    /**
+     * @param int $viewCount
+     */
+    public function setViewCount($viewCount)
+    {
+        $this->viewCount = $viewCount;
     }
 }
 
