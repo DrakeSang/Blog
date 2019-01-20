@@ -30,6 +30,7 @@ class ArticleController extends Controller
         if($form->isSubmitted() && $form->isValid()){
             $currentUser = $this->getUser();
             $article->setAuthor($currentUser);
+            $currentUser->addPost($article);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
@@ -51,7 +52,10 @@ class ArticleController extends Controller
      */
     public function viewArticle($id)
     {
-        $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
+        $article = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->find($id);
 
         return  $this->render("article/details.html.twig",
             ['article' => $article]);
@@ -68,7 +72,10 @@ class ArticleController extends Controller
      */
     public function editArticle($id, Request $request)
     {
-        $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
+        $article = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->find($id);
 
         if($article == null) {
             return $this->redirectToRoute("blog_index");
@@ -102,7 +109,10 @@ class ArticleController extends Controller
      */
     public function deleteArticle($id, Request $request)
     {
-        $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
+        $article = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->find($id);
 
         if($article == null) {
             return $this->redirectToRoute("blog_index");

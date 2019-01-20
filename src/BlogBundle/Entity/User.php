@@ -51,9 +51,22 @@ class User implements UserInterface
      */
     private $articles;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Role")
+     *
+     * @ORM\JoinTable(name="users_roles",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     *     )
+     */
+    private $roles;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     /**
@@ -159,22 +172,16 @@ class User implements UserInterface
     }
 
     /**
-     * Returns the roles granted to the user.
      *
-     *     public function getRoles()
-     *     {
-     *         return array('ROLE_USER');
-     *     }
+     * @param Role $role
      *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return (Role|string)[] The user roles
+     * @return User
      */
-    public function getRoles()
+    public function addRole(Role $role)
     {
-        return [];
+        $this->roles[] = $role;
+
+        return $this;
     }
 
     /**
@@ -208,6 +215,35 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     *     public function getRoles()
+     *     {
+     *         return array('ROLE_USER');
+     *     }
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return (Role|string)[] The user roles
+     */
+    public function getRoles()
+    {
+        $stringRoles = [];
+
+        foreach ($this->roles as $role) {
+            /**
+             * @var $role Role
+             */
+            $stringRoles[] = $role->getRole();
+        }
+
+        return $stringRoles;
     }
 }
 

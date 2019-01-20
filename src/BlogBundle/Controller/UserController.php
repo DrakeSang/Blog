@@ -2,6 +2,7 @@
 
 namespace BlogBundle\Controller;
 
+use BlogBundle\Entity\Role;
 use BlogBundle\Entity\User;
 use BlogBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -26,6 +27,12 @@ class UserController extends Controller
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPassword());
 
+            $role = $this
+                ->getDoctrine()
+                ->getRepository(Role::class)
+                ->findOneBy(['name' => 'ROLE_USER']);
+
+            $user->addRole($role);
             $user->setPassword($password);
 
             $em = $this->getDoctrine()->getManager();
@@ -34,6 +41,7 @@ class UserController extends Controller
 
             return $this->redirectToRoute("security_login");
         }
+
         return $this->render('user/register.html.twig');
     }
 
