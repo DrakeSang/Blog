@@ -27,6 +27,7 @@ class UserController extends Controller
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPassword());
 
+            /** @var Role $role */
             $role = $this
                 ->getDoctrine()
                 ->getRepository(Role::class)

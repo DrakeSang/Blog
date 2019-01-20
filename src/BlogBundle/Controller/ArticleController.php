@@ -3,6 +3,7 @@
 namespace BlogBundle\Controller;
 
 use BlogBundle\Entity\Article;
+use BlogBundle\Entity\User;
 use BlogBundle\Form\ArticleType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -72,12 +73,21 @@ class ArticleController extends Controller
      */
     public function editArticle($id, Request $request)
     {
+
+        /** @var Article $article */
         $article = $this
             ->getDoctrine()
             ->getRepository(Article::class)
             ->find($id);
 
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
         if($article == null) {
+            return $this->redirectToRoute("blog_index");
+        }
+
+        if(!$currentUser->isAuthor($article) && !$currentUser->isAdmin()) {
             return $this->redirectToRoute("blog_index");
         }
 
@@ -109,12 +119,20 @@ class ArticleController extends Controller
      */
     public function deleteArticle($id, Request $request)
     {
+        /** @var Article $article */
         $article = $this
             ->getDoctrine()
             ->getRepository(Article::class)
             ->find($id);
 
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
         if($article == null) {
+            return $this->redirectToRoute("blog_index");
+        }
+
+        if(!$currentUser->isAuthor($article) && !$currentUser->isAdmin()) {
             return $this->redirectToRoute("blog_index");
         }
 

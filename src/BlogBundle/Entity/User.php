@@ -171,10 +171,9 @@ class User implements UserInterface
         return $this;
     }
 
+
     /**
-     *
      * @param Role $role
-     *
      * @return User
      */
     public function addRole(Role $role)
@@ -229,8 +228,6 @@ class User implements UserInterface
      * Alternatively, the roles might be stored on a ``roles`` property,
      * and populated in any number of different ways when the user object
      * is created.
-     *
-     * @return (Role|string)[] The user roles
      */
     public function getRoles()
     {
@@ -244,6 +241,23 @@ class User implements UserInterface
         }
 
         return $stringRoles;
+    }
+
+    /**
+     * @param Article $article
+     * @return bool
+     */
+    public function isAuthor(Article $article)
+    {
+        return $article->getAuthorId() == $this->getId();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return in_array("ROLE_ADMIN", $this->getRoles());
     }
 }
 
