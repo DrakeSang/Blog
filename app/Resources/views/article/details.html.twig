@@ -18,6 +18,10 @@
                         {{ article.author.fullName }}
                     </small>
 
+                    <a class="btn btn-success btn-xs" href="">
+                        Like the article if you want. :)
+                    </a>
+
                     <footer>
                         <div class="pull-right">
                             {% if app.getUser() and app.getUser().isAdmin() %}

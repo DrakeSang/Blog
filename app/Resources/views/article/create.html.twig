@@ -3,7 +3,7 @@
 {% block main %}
     <div class="container body-content span=8 offset=2">
         <div class="well">
-            <form class="form-horizontal" action="{{ path('article_create') }}" method="POST">
+            <form class="form-horizontal" action="{{ path('article_create') }}" enctype="multipart/form-data" method="POST">
                 <fieldset>
                     <legend>New Post</legend>
 
@@ -24,10 +24,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label" for="article_imageUrl">Image URL</label>
+                        <label class="col-sm-4 control-label" for="article_image">Image</label>
                         <div class="col-sm-4 ">
-                            <input type="text" class="form-control" id="article_imageUrl" placeholder="Image URL"
-                                   name="article[imageUrl]">
+                            <input type="file" accept=".image/png, .image/jpg, .image/jpeg" class="form-control" id="article_image" placeholder="Image"
+                                   name="article[image]">
                         </div>
                     </div>
 

@@ -65,9 +65,9 @@ class Article
     /**
      * @var string
      *
-     * @ORM\Column(name="imageUrl", type="text", nullable=false)
+     * @ORM\Column(name="image", type="string", nullable=false)
      */
-    private $imageUrl;
+    private $image;
 
     /**
      * @var integer
@@ -232,17 +232,17 @@ class Article
     /**
      * @return string
      */
-    public function getImageUrl()
+    public function getImage()
     {
-        return $this->imageUrl;
+        return $this->image;
     }
 
     /**
-     * @param string $imageUrl
+     * @param string $image
      */
-    public function setImageUrl($imageUrl)
+    public function setImage($image)
     {
-        $this->imageUrl = $imageUrl;
+        $this->image = $image;
     }
 
     /**

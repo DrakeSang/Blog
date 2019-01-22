@@ -7,6 +7,8 @@ use BlogBundle\Entity\User;
 use BlogBundle\Form\ArticleType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -34,6 +36,20 @@ class ArticleController extends Controller
 
             $article->setAuthor($currentUser);
             $currentUser->addPost($article);
+
+
+            /** @var UploadedFile $file */
+            $file = $form->getData()->getImage();
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
+            try{
+                $file->move($this->getParameter('article_directory'),
+                    $fileName);
+            }catch (FileException $exception){
+
+            }
+
+            $article->setImage($fileName);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
@@ -105,6 +121,21 @@ class ArticleController extends Controller
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
+
+
+            /** @var UploadedFile $file */
+            $file = $form->getData()->getImage();
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
+            try{
+                $file->move($this->getParameter('article_directory'),
+                    $fileName);
+            }catch (FileException $exception){
+
+            }
+
+            $article->setImage($fileName);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
