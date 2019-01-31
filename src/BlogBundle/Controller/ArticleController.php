@@ -3,6 +3,7 @@
 namespace BlogBundle\Controller;
 
 use BlogBundle\Entity\Article;
+use BlogBundle\Entity\Comment;
 use BlogBundle\Entity\User;
 use BlogBundle\Form\ArticleType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -36,7 +37,6 @@ class ArticleController extends Controller
 
             $article->setAuthor($currentUser);
             $currentUser->addPost($article);
-
 
             /** @var UploadedFile $file */
             $file = $form->getData()->getImage();
@@ -78,6 +78,13 @@ class ArticleController extends Controller
             ->getRepository(Article::class)
             ->find($id);
 
+
+        /** @var Comment[] $comments */
+        $comments = $this
+            ->getDoctrine()
+            ->getRepository(Comment::class)
+            ->findBy(['article' => $article], ['dateAdded' => 'desc']);
+
         $article->setViewCount($article->getViewCount() + 1);
 
         $em = $this->getDoctrine()->getManager();
@@ -85,7 +92,7 @@ class ArticleController extends Controller
         $em->flush();
 
         return  $this->render("article/details.html.twig",
-            ['article' => $article]);
+            ['article' => $article, 'comments' => $comments]);
     }
 
     /**
@@ -209,5 +216,19 @@ class ArticleController extends Controller
 
         return $this->render("article/myArticles.html.twig",
             array('articles' => $articles));
+    }
+
+    /**
+     * @Route("/article/like/{id}", name="article_likes")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     *
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function articleLikes($id)
+    {
+        var_dump($id);
+        return $this->redirectToRoute('blog_index');
     }
 }

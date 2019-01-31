@@ -54,7 +54,7 @@ class User implements UserInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Role")
+     * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Role", inversedBy="users")
      *
      * @ORM\JoinTable(name="users_roles",
      *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -63,10 +63,18 @@ class User implements UserInterface
      */
     private $roles;
 
+    /**
+     * @var ArrayCollection|Comment[]
+     *
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Comment", mappedBy="author")
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
         $this->roles = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -259,5 +267,23 @@ class User implements UserInterface
     {
         return in_array("ROLE_ADMIN", $this->getRoles());
     }
-}
 
+    /**
+     * @return Comment[]|ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment|null $comment
+     * @return User
+     */
+    public function addComment(Comment $comment = null)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
+    }
+}

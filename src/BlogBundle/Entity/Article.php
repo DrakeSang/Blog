@@ -2,6 +2,7 @@
 
 namespace BlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -77,6 +78,13 @@ class Article
     private $viewCount;
 
     /**
+     * @var ArrayCollection|Comment[]
+     *
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Comment", mappedBy="article")
+     */
+    private $comments;
+
+    /**
      * Article constructor.
      * @throws \Exception
      */
@@ -84,6 +92,7 @@ class Article
     {
         $this->dateAdded = new \DateTime('now');
         $this->viewCount = 0;
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -259,6 +268,26 @@ class Article
     public function setViewCount($viewCount)
     {
         $this->viewCount = $viewCount;
+    }
+
+    /**
+     * @return Comment[]|ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment|null $comment
+     *
+     * @return Article
+     */
+    public function addComment(Comment $comment = null)
+    {
+        $this->comments[] = $comment;
+
+        return $this;
     }
 }
 

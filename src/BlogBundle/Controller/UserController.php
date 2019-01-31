@@ -56,7 +56,9 @@ class UserController extends Controller
             return $this->redirectToRoute("security_login");
         }
 
-        return $this->render('user/register.html.twig');
+        return $this->render('user/register.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
