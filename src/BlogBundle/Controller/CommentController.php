@@ -9,6 +9,7 @@ use BlogBundle\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class CommentController extends Controller
 {
@@ -20,6 +21,7 @@ class CommentController extends Controller
      * @throws \Exception
      *
      * @Route("/article/{id}/comment", name="add_comment")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function addComment(Request $request, Article $article)
     {

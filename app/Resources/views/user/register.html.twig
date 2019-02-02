@@ -5,7 +5,8 @@
 {% block main %}
 
     {% for msg in app.session.flashBag.get('info') %}
-        <div class="alert alert-danger">
+        <div class="alert alert-danger alert-dismissable">
+            {#<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>#}
             {{ msg }}
         </div>
     {% endfor %}

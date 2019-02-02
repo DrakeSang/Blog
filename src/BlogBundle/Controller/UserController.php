@@ -29,12 +29,14 @@ class UserController extends Controller
             $userDB = $this
                 ->getDoctrine()
                 ->getRepository(User::class)
-                ->findBy(['email' => $email]);
+                ->findOneBy(['email' => $email]);
 
-            if(count($userDB) > 0) {
+            if(null !== $userDB) {
                 $this->addFlash('info', "Username with email " . $email . " already taken!");
 
-                return $this->render('user/register.html.twig');
+                return $this->render('user/register.html.twig', [
+                    'form' => $form->createView()
+                ]);
             }
 
             $password = $this->get('security.password_encoder')
