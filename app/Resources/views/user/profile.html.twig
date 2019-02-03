@@ -4,4 +4,10 @@
 
     <h1>Hello, {{ user.fullName }} </h1>
 
+    <h2>Click to check your mail
+        <a href="{{ path('user_mailbox') }}">
+            <span class="glyphicon glyphicon-envelope">({{ countMsg }})</span>
+        </a>
+    </h2>
+
 {% endblock %}

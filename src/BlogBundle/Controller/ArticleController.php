@@ -71,13 +71,11 @@ class ArticleController extends Controller
      */
     public function viewArticle($id)
     {
-
         /** @var Article $article */
         $article = $this
             ->getDoctrine()
             ->getRepository(Article::class)
             ->find($id);
-
 
         /** @var Comment[] $comments */
         $comments = $this

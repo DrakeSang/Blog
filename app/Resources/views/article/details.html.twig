@@ -30,7 +30,7 @@
                         <p>{{ comment.content }}</p>
                         <small>{{ comment.dateAdded|date('F jS \\a\\t g:ia', 'Europe/Sofia' ) }}</small>
                         <br />
-                        <a href="{{ path('add_message', {'id': comment.author.id}) }}">
+                        <a href="{{ path('add_message', {'id': comment.author.id }) }}">
                             <small>{{ comment.author.fullName }}</small>
                         </a>
                         <hr />

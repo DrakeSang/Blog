@@ -22,8 +22,11 @@ class MessageController extends Controller
      * @Route("/user/{id}/message", name="add_message")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function indexAction(Request $request, $id)
+    public function addMessage(Request $request, $id)
     {
+//        $articleIdFromRequest = substr($_SERVER['HTTP_REFERER'],
+//            strrpos($_SERVER['HTTP_REFERER'], '/') + 1);
+
         /** @var User $currentUser */
         $currentUser = $this->getUser();
 
@@ -40,7 +43,8 @@ class MessageController extends Controller
         if($form->isSubmitted()) {
             $message
                 ->setSender($currentUser)
-                ->setRecipient($recipient);
+                ->setRecipient($recipient)
+                ->setIsReader(false);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($message);
@@ -54,6 +58,76 @@ class MessageController extends Controller
         }
 
         return $this->render('user/send_message.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/user/mailbox", name="user_mailbox")
+     */
+    public function mailBox()
+    {
+        $currentUserId = $this->getUser()->getId();
+
+        /** @var User $user */
+        $user = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->find($currentUserId);
+
+        $messages = $user->getRecipientMessages();
+
+        return $this->render("user/mailbox.html.twig", [
+            'messages' => $messages
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     *
+     * @Route("/user/mailbox/message/{id}", name="user_mailbox_current_message")
+     */
+    public function messageAction(Request $request, $id)
+    {
+        /** @var Message $message */
+        $message = $this
+            ->getDoctrine()
+            ->getRepository(Message::class)
+            ->find($id);
+
+        $message->setIsReader(true);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($message);
+        $em->flush();
+
+        $sendMessage = new Message();
+        $form = $this->createForm(MessageType::class, $sendMessage);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()) {
+            $sendMessage
+                ->setSender($this->getUser())
+                ->setRecipient($message->getSender())
+                ->setIsReader(false);
+
+            $em->persist($sendMessage);
+            $em->flush();
+
+            $this->addFlash("message", "Message sent successfully!");
+
+            return $this->redirectToRoute("user_mailbox_current_message", [
+                'id'=> $id
+            ]);
+        }
+
+
+        return $this->render("user/message.html.twig", [
+            'message' => $message,
             'form' => $form->createView()
         ]);
     }

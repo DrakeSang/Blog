@@ -2,6 +2,7 @@
 
 namespace BlogBundle\Controller;
 
+use BlogBundle\Entity\Message;
 use BlogBundle\Entity\Role;
 use BlogBundle\Entity\User;
 use BlogBundle\Form\UserType;
@@ -76,7 +77,17 @@ class UserController extends Controller
             ->getRepository(User::class)
             ->find($id);
 
-        return $this->render("user/profile.html.twig",
-            ['user' => $user]);
+
+        $unreadMessages = $this
+            ->getDoctrine()
+            ->getRepository(Message::class)
+            ->findBy(['recipient' => $user, 'isReader' => false]);
+
+        $countMsg = count($unreadMessages);
+
+        return $this->render("user/profile.html.twig", [
+            'user' => $user,
+            'countMsg' => $countMsg
+        ]);
     }
 }

@@ -56,6 +56,13 @@ class Message
     private $recipient;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isReaded", nullable=false, type="boolean")
+     */
+    private $isReader;
+
+    /**
      * Message constructor.
      * @throws \Exception
      */
@@ -181,6 +188,25 @@ class Message
     public function setRecipient(User $recipient)
     {
         $this->recipient = $recipient;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReader()
+    {
+        return $this->isReader;
+    }
+
+    /**
+     * @param bool $isReader
+     * @return Message
+     */
+    public function setIsReader($isReader)
+    {
+        $this->isReader = $isReader;
 
         return $this;
     }
