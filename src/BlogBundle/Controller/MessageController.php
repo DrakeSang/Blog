@@ -64,8 +64,10 @@ class MessageController extends Controller
 
     /**
      * @Route("/user/mailbox", name="user_mailbox")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function mailBox()
+    public function mailBox(Request $request)
     {
         $currentUserId = $this->getUser()->getId();
 
@@ -77,8 +79,15 @@ class MessageController extends Controller
 
         $messages = $user->getRecipientMessages();
 
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $messages, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            3/*limit per page*/
+        );
+
         return $this->render("user/mailbox.html.twig", [
-            'messages' => $messages
+            'pagination' => $pagination
         ]);
     }
 

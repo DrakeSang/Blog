@@ -2,7 +2,7 @@
 
 {% block main %}
 
-    {% for message in messages %}
+    {% for message in pagination %}
 
         <p><a href="{{ path('user_mailbox_current_message', {'id': message.id}) }}">{{ message.sender.email }}</a>
 
@@ -14,5 +14,10 @@
         </p>
 
     {% endfor %}
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
 {% endblock %}
