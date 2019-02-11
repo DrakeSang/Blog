@@ -85,6 +85,13 @@ class Article
     private $comments;
 
     /**
+     * @var Category
+     *
+     * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Category", inversedBy="articles", cascade={"remove"})
+     */
+    private $category;
+
+    /**
      * Article constructor.
      * @throws \Exception
      */
@@ -286,6 +293,27 @@ class Article
     public function addComment(Comment $comment = null)
     {
         $this->comments[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return Article
+     *
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
 
         return $this;
     }

@@ -18,16 +18,27 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="article_content">Content</label>
                         <div class="col-sm-6">
-                        <textarea class="form-control" rows="6" id="article_content"
+                            <textarea class="form-control" rows="6" id="article_content"
                                   name="article[content]"></textarea>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="article_image">Image</label>
-                        <div class="col-sm-4 ">
-                            <input type="file" accept=".image/png, .image/jpg, .image/jpeg" class="form-control" id="article_image" placeholder="Image"
-                                   name="article[image]">
+                        <div class="col-sm-4">
+                            <input type="file" accept=".image/png, .image/jpg, .image/jpeg" class="form-control"
+                                   id="article_image" placeholder="Image" name="article[image]">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="article_category">Categories</label>
+                        <div class="col-sm-4">
+                            <select name="article[category]" id="article_category" class="form-control">
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
 

@@ -3,6 +3,7 @@
 namespace BlogBundle\Controller;
 
 use BlogBundle\Entity\Article;
+use BlogBundle\Entity\Category;
 use BlogBundle\Entity\Comment;
 use BlogBundle\Entity\User;
 use BlogBundle\Form\ArticleType;
@@ -27,11 +28,19 @@ class ArticleController extends Controller
      */
     public function createArticle(Request $request)
     {
+        /** @var Category[] $categories */
+        $categories = $this
+            ->getDoctrine()
+            ->getRepository(Category::class)
+            ->findAll();
+
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+//            dump($form->getData());
+//            exit;
             /** @var User $currentUser */
             $currentUser = $this->getUser();
 
@@ -59,7 +68,7 @@ class ArticleController extends Controller
         }
 
         return $this->render('article/create.html.twig',
-            array('form' => $form->createView()));
+            array('form' => $form->createView(), 'categories' => $categories));
     }
 
     /**

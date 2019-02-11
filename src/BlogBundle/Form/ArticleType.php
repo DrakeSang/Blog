@@ -2,6 +2,8 @@
 
 namespace BlogBundle\Form;
 
+use BlogBundle\Entity\Category;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -19,7 +21,14 @@ class ArticleType extends AbstractType
             ->add('title', TextType::class)
             ->add('content', TextType::class)
             ->add('image',FileType::class,
-                ['data' => null]);
+                ['data' => null])
+            ->add('category', EntityType::class,
+                [
+                    'class' => 'BlogBundle\Entity\Category',
+                    'choice_label' => function(Category $category) {
+                        return $category->getName();
+                    }
+                ]);
     }
 
     /**
