@@ -45,6 +45,13 @@ class User implements UserInterface
     private $fullName;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", nullable=false)
+     */
+    private $image;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Article", mappedBy="author", cascade={"remove"})
@@ -173,6 +180,22 @@ class User implements UserInterface
     public function getFullName()
     {
         return $this->fullName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param string $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
     }
 
     /**

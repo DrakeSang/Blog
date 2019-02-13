@@ -8,6 +8,8 @@ use BlogBundle\Entity\User;
 use BlogBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,7 +26,7 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        if($form->isSubmitted()) {
+        if($form->isSubmitted() && $form->isValid()) {
             $email = $form->getData()->getEmail();
 
             $userDB = $this
@@ -51,6 +53,19 @@ class UserController extends Controller
 
             $user->setPassword($password);
             $user->addRole($role);
+
+            /** @var UploadedFile $file */
+            $file = $form->getData()->getImage();
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
+            try{
+                $file->move($this->getParameter('user_directory'),
+                    $fileName);
+            }catch (FileException $exception){
+
+            }
+
+            $user->setImage($fileName);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);

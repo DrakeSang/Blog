@@ -3,6 +3,7 @@
 namespace BlogBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -24,7 +25,11 @@ class UserType extends AbstractType
                     'first_options' => array('label' => 'Password'),
                     'second_options' => array('label' => 'Repeat Password')
                 ])
-            ->add('fullName', TextType::class);
+            ->add('fullName', TextType::class)
+            ->add('image', FileType::class,
+                [
+                    'data' => null
+                ]);
     }/**
      * {@inheritdoc}
      */
