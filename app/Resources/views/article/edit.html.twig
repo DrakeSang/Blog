@@ -32,6 +32,17 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="article_category">Categories</label>
+                        <div class="col-sm-4">
+                            <select name="article[category]" id="article_category" class="form-control">
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
                     {{ form_row(form._token) }}
 
                     <div class="form-group">

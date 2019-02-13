@@ -10,6 +10,7 @@ use BlogBundle\Form\ArticleType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,8 +40,6 @@ class ArticleController extends Controller
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-//            dump($form->getData());
-//            exit;
             /** @var User $currentUser */
             $currentUser = $this->getUser();
 
@@ -113,6 +112,11 @@ class ArticleController extends Controller
      */
     public function editArticle($id, Request $request)
     {
+        /** @var Category[] $categories */
+        $categories = $this
+            ->getDoctrine()
+            ->getRepository(Category::class)
+            ->findAll();
 
         /** @var Article $article */
         $article = $this
@@ -131,24 +135,33 @@ class ArticleController extends Controller
             return $this->redirectToRoute("blog_index");
         }
 
+        $oldFileName = $article->getImage();
+        $oldFileNamePath = $this->getParameter('article_directory') . "/{$oldFileName}";
+
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
+            if($article->getImage() != null) {
+                /** @var UploadedFile $file */
+                $file = $form->getData()->getImage();
+                $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
+                if(file_exists($oldFileNamePath)) {
+                    unlink($oldFileNamePath);
+                }
 
-            /** @var UploadedFile $file */
-            $file = $form->getData()->getImage();
-            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+                try{
+                    $file->move($this->getParameter('article_directory'),
+                        $fileName);
+                }catch (FileException $exception){
 
-            try{
-                $file->move($this->getParameter('article_directory'),
-                    $fileName);
-            }catch (FileException $exception){
+                }
 
+                $article->setImage($fileName);
+            } else {
+                $article->setImage($oldFileName);
             }
-
-            $article->setImage($fileName);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
@@ -159,8 +172,11 @@ class ArticleController extends Controller
         }
 
         return $this->render('article/edit.html.twig',
-            array('article' => $article,
-                'form' => $form->createView()));
+            array(
+                'article' => $article,
+                'form' => $form->createView(),
+                'categories' => $categories
+            ));
     }
 
     /**

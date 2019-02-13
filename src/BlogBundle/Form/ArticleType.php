@@ -24,10 +24,8 @@ class ArticleType extends AbstractType
                 ['data' => null])
             ->add('category', EntityType::class,
                 [
-                    'class' => 'BlogBundle\Entity\Category',
-                    'choice_label' => function(Category $category) {
-                        return $category->getName();
-                    }
+                    'class' => Category::class,
+                    'choice_label' => 'name'
                 ]);
     }
 

@@ -306,12 +306,12 @@ class Article
     }
 
     /**
-     * @param Category $category
+     * @param Category|null $category
      *
      * @return Article
      *
      */
-    public function setCategory($category)
+    public function setCategory(Category $category = null)
     {
         $this->category = $category;
 

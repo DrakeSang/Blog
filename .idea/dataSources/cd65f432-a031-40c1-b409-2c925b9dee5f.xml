@@ -1006,31 +1006,30 @@
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="255" parent="246" name="title">
+    <column id="255" parent="246" name="category_id">
       <Position>2</Position>
+      <DataType>int(11)|0s</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="256" parent="246" name="title">
+      <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="256" parent="246" name="content">
-      <Position>3</Position>
+    <column id="257" parent="246" name="content">
+      <Position>4</Position>
       <DataType>longtext|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="257" parent="246" name="dateAdded">
-      <Position>4</Position>
+    <column id="258" parent="246" name="dateAdded">
+      <Position>5</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="258" parent="246" name="authorId">
-      <Position>5</Position>
-      <DataType>int(11)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="259" parent="246" name="viewCount">
+    <column id="259" parent="246" name="authorId">
       <Position>6</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
@@ -1042,17 +1041,18 @@
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="261" parent="246" name="category_id">
+    <column id="261" parent="246" name="viewCount">
       <Position>8</Position>
       <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="262" parent="246" name="IDX_BFDD3168A196F9FD">
-      <ColNames>authorId</ColNames>
+    <index id="262" parent="246" name="IDX_BFDD316812469DE2">
+      <ColNames>category_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="263" parent="246" name="IDX_BFDD316812469DE2">
-      <ColNames>category_id</ColNames>
+    <index id="263" parent="246" name="IDX_BFDD3168A196F9FD">
+      <ColNames>authorId</ColNames>
       <Type>btree</Type>
     </index>
     <key id="264" parent="246" name="PRIMARY">
@@ -1060,16 +1060,16 @@
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="265" parent="246" name="FK_BFDD3168A196F9FD">
-      <ColNames>authorId</ColNames>
-      <RefSchemaName>symfony_blog_exercise</RefSchemaName>
-      <RefTableName>users</RefTableName>
-      <RefColNames>id</RefColNames>
-    </foreign-key>
-    <foreign-key id="266" parent="246" name="FK_BFDD316812469DE2">
+    <foreign-key id="265" parent="246" name="FK_BFDD316812469DE2">
       <ColNames>category_id</ColNames>
       <RefSchemaName>symfony_blog_exercise</RefSchemaName>
       <RefTableName>categories</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="266" parent="246" name="FK_BFDD3168A196F9FD">
+      <ColNames>authorId</ColNames>
+      <RefSchemaName>symfony_blog_exercise</RefSchemaName>
+      <RefTableName>users</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <column id="267" parent="247" name="id">
