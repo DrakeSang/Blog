@@ -22,9 +22,9 @@
                         Like the article if you want. :)
                     </a>
 
-                    <button class="btn btn-success btn-xs" id="btnComment">Add your comment. :)</button>
-
-                    <div id="form"></div>
+                    <a class="btn btn-success btn-xs" href="{{ path('article_comment', {'id': article.id}) }}">
+                        Add your comment. :)
+                    </a>
 
                     {% for comment in comments %}
                         <p>{{ comment.content }}</p>
@@ -50,26 +50,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        let form = $(`
-            <form method="post" action="{{ path('add_comment', {'id': article.id }) }}" >
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <textarea class="form-control" rows="6" id="comment_content" name="comment[content]"></textarea>
-                        <br />
-                        <input class="btn btn-success btn-xs" type="submit" value="Create comment"/>
-                    </div>
-                </div>
-            </form>
-        `);
-
-        $('#btnComment').on('click', function (e) {
-            e.preventDefault();
-            $('#form').append(form);
-            $('#form').toggle();
-        })
-    </script>
 
 {% endblock %}
 
