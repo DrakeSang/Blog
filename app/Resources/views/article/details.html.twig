@@ -18,23 +18,32 @@
                         {{ article.author.fullName }}
                     </small>
 
-                    <a class="btn btn-success btn-xs" href="{{ path('article_likes', {'id': article.id}) }}">
-                        Like the article if you want. :)
-                    </a>
-
-                    <a class="btn btn-success btn-xs" href="{{ path('article_comment', {'id': article.id}) }}">
-                        Add your comment. :)
-                    </a>
-
-                    {% for comment in comments %}
-                        <p>{{ comment.content }}</p>
-                        <small>{{ comment.dateAdded|date('F jS \\a\\t g:ia', 'Europe/Sofia' ) }}</small>
-                        <br />
-                        <a href="{{ path('add_message', {'id': comment.author.id }) }}">
-                            <small>{{ comment.author.fullName }}</small>
+                    <div>
+                        <a class="btn btn-success btn-xs" href="{{ path('article_likes', {'id': article.id}) }}">
+                            Like the article if you want. :)
                         </a>
-                        <hr />
-                    {% endfor %}
+
+                        <a class="btn btn-success btn-xs" href="{{ path('article_comment', {'id': article.id}) }}">
+                            Add your comment. :)
+                        </a>
+                    </div>
+
+                    <div class="comments">
+                        {% for comment in comments %}
+                            <div class="top_part">
+                                <img src="{{ asset('uploads/images/users/' ~ comment.author.image) }}" alt="no pic">
+                                <div class="user_info">
+                                    <p>{{ comment.author.fullName }}</p>
+                                    <p>{{ comment.author.email }}</p>
+                                </div>
+                            </div>
+                            <div class="bottom_part">
+                                <p>{{ comment.dateAdded|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</p>
+                                <p>{{ comment.content }}</p>
+                            </div>
+                            <hr />
+                        {% endfor %}
+                    </div>
 
                     <footer>
                         <div class="pull-right">
