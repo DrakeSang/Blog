@@ -28,22 +28,24 @@
                         </a>
                     </div>
 
-                    <div class="comments">
-                        {% for comment in comments %}
-                            <div class="top_part">
-                                <img src="{{ asset('uploads/images/users/' ~ comment.author.image) }}" alt="no pic">
-                                <div class="user_info">
-                                    <p>{{ comment.author.fullName }}</p>
-                                    <p>{{ comment.author.email }}</p>
+                    {% if comments|length > 0 %}
+                        <div class="comments">
+                            {% for comment in comments %}
+                                <div class="top_part">
+                                    <img src="{{ asset('uploads/images/users/' ~ comment.author.image) }}" alt="no pic">
+                                    <div class="user_info">
+                                        <p>{{ comment.author.fullName }}</p>
+                                        <p>{{ comment.author.email }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="bottom_part">
-                                <p>{{ comment.dateAdded|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</p>
-                                <p>{{ comment.content }}</p>
-                            </div>
-                            <hr />
-                        {% endfor %}
-                    </div>
+                                <div class="bottom_part">
+                                    <p>{{ comment.dateAdded|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</p>
+                                    <p>{{ comment.content }}</p>
+                                </div>
+                                <hr />
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
                     <footer>
                         <div class="pull-right">

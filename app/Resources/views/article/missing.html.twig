@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <h1>{{ article_name }} - резултати от търсене</h1>
+
+    <div class="container body-content span=8 offset=2">
+        <div class="well">
+            <form action="{{ path('find_article_by_name') }}" method="post" class="form-horizontal" role="search">
+                <fieldset>
+                    <legend>Search your article by name.</legend>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="article_name">Article Name</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="Search" name="article_name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <h2>Можете да търсите отново статия или да се върнете до главната страница
+        <a class="btn btn-default btn-xs" href="{{ path('blog_index') }}">Back</a>
+    </h2>
+{% endblock %}
+

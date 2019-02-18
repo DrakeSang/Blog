@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/comments.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/index.css') }}">
         <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
         <script>
             setTimeout(function () {
@@ -69,6 +70,14 @@
                                     Logout
                                 </a>
                             </li>
+                            <li>
+                                <form action="{{ path('find_article_by_name') }}" method="post" class="navbar-form navbar-left" role="search">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Search" name="article_name">
+                </div>
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </form>
+                            </li>
                         {% else %}
                             <li>
                                 <a href="{{ path('user_register') }}">
@@ -79,6 +88,14 @@
                                 <a href="{{ path('security_login') }}">
                                     LOGIN
                                 </a>
+                            </li>
+                            <li>
+                                <form action="{{ path('find_article_by_name') }}" method="post" class="navbar-form navbar-left" role="search">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Search" name="article_name">
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </form>
                             </li>
                         {% endif %}
                     </ul>
