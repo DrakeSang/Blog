@@ -1,5 +1,7 @@
 $(document).ready(function () {
     $('.categories_navigation li a').on('click', function (e) {
+        e.preventDefault();
+
         $('.categories_navigation li.checked').removeClass('checked');
         $(this).parent().addClass('checked');
 
@@ -28,7 +30,29 @@ $(document).ready(function () {
                 $('.article-body').removeClass('loading');
             }
         });
+    });
 
+    $('.add_to_favourites').on('click', function(e) {
         e.preventDefault();
-    })
+
+        let activeUrl = $(this).attr('href');
+
+        $.ajax({
+            url: activeUrl,
+            success: function (response) {
+                let typeOfResponse = typeof(response);
+
+                if(typeOfResponse === "string") {
+                    location.href = '\\login';
+                } else {
+                    if(response["message"] === "alreadyAdded") {
+                        alert('This game was already added to your favourites!');
+                    }else {
+                        alert('The game was successfully added to your favourites!');
+                    }
+
+                }
+            }
+        })
+    });
 });

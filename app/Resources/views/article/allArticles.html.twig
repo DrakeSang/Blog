@@ -32,7 +32,11 @@
                             <footer>
                                 <div class="pull-right">
                                     <a class="btn btn-default btn-xs"
-                                       href="{{ path('article_view', {'id': article.id}) }}">Read more &raquo;</a>
+                                       href="{{ path('article_view', {'id': article.id}) }}">Read more &raquo;
+                                    </a>
+                                    <a class="btn btn-success btn-xs add_to_favourites"
+                                       href="{{ path('add_to_favourites', {'articleId': article.id}) }}">Add article to favourites. :)
+                                    </a>
                                 </div>
                             </footer>
                         </div>

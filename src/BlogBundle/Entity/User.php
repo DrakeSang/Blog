@@ -91,6 +91,18 @@ class User implements UserInterface
      */
     private $recipients;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Article", inversedBy="users")
+     *
+     * @ORM\JoinTable(name="users_articles",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="article_id", referencedColumnName="id")}
+     *     )
+     */
+    private $favouriteArticles;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -98,6 +110,7 @@ class User implements UserInterface
         $this->comments = new ArrayCollection();
         $this->senders = new ArrayCollection();
         $this->recipients = new ArrayCollection();
+        $this->favouriteArticles = new ArrayCollection();
     }
 
     /**
@@ -217,7 +230,6 @@ class User implements UserInterface
 
         return $this;
     }
-
 
     /**
      * @param Role $role
@@ -340,5 +352,24 @@ class User implements UserInterface
     public function getRecipientMessages()
     {
         return $this->recipients;
+    }
+
+    /**
+     * @param Article $article
+     * @return User
+     */
+    public function setFavouriteArticle(Article $article)
+    {
+        $this->favouriteArticles[] = $article;
+
+        return $this;
+    }
+
+    /**
+     * @return Article[]|ArrayCollection
+     */
+    public function getFavouriteArticles()
+    {
+        return $this->favouriteArticles;
     }
 }

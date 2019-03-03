@@ -92,6 +92,13 @@ class Article
     private $category;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\User", mappedBy="favouriteArticles")
+     */
+    private $users;
+
+    /**
      * Article constructor.
      * @throws \Exception
      */
@@ -100,6 +107,7 @@ class Article
         $this->dateAdded = new \DateTime('now');
         $this->viewCount = 0;
         $this->comments = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**

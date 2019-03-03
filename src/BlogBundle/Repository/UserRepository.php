@@ -10,4 +10,15 @@ namespace BlogBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getFavouriteArticle(int $userId, int $articleId) {
+        return $this->createQueryBuilder('u')
+            ->select('u.id as userId, a.id as articleId')
+            ->innerJoin('u.favouriteArticles', 'a')
+            ->where('u.id = :user_id')
+            ->andWhere('a.id = :article_id')
+            ->setParameter('user_id', $userId)
+            ->setParameter('article_id', $articleId)
+            ->getQuery()
+            ->getResult();
+    }
 }

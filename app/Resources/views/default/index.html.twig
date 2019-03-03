@@ -48,7 +48,7 @@
                 {% for article in articlesPerPage %}
                     <article>
                         <div class="row">
-                            <div class="col-md-4 leftPart">
+                            <div class="leftPart">
                                 <a href="{{ path('article_view', {'id': article.id}) }}">
                                     <img src="{{ asset('uploads/images/articles/' ~ article.image) }}" alt="no pic">
                                 </a>
@@ -72,7 +72,12 @@
                                 <footer>
                                     <div class="pull-right">
                                         <a class="btn btn-default btn-xs"
-                                           href="{{ path('article_view', {'id': article.id}) }}">Read more &raquo;</a>
+                                           href="{{ path('article_view', {'id': article.id}) }}">Read more &raquo;
+                                        </a>
+
+                                        <a class="btn btn-success btn-xs add_to_favourites"
+                                           href="{{ path('add_to_favourites', {'articleId': article.id}) }}">Add article to favourites. :)
+                                        </a>
                                     </div>
                                 </footer>
                             </div>

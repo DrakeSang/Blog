@@ -11,17 +11,14 @@
 }
 
 .leftPart {
-    position: relative;
+    width: 100%;
 }
 
 .leftPart img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    display: block;
+    margin: 0 auto;
     width: 250px;
     height: 200px;
-    margin-top: -100px;
-    margin-left: -125px;
 }
 
 .loader {
@@ -56,5 +53,20 @@
     .pagination a {
         font-size: 40px;
         padding: 20px;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .leftPart {
+        width: 33.3%;
+        position: relative;
+    }
+
+    .leftPart img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -100px;
+        margin-left: -125px;
     }
 }

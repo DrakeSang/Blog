@@ -11,8 +11,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use BlogBundle\Entity\Pagination;
 
 class ArticleController extends Controller
 {
@@ -241,16 +244,133 @@ class ArticleController extends Controller
     }
 
     /**
-     * @Route("/article/like/{id}", name="article_likes")
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Route("/article", name="find_article_by_name")
      *
+     * @param Request $request
      *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function articleLikes($id)
+    public function findArticleByName(Request $request)
     {
-        var_dump($id);
-        return $this->redirectToRoute('blog_index');
+        $articleName = "";
+        if($request->getMethod() == "POST"){
+            $articleName = $request->request->get('article_name');
+
+            /** @var Article $article */
+            $article = $this
+                ->getDoctrine()
+                ->getRepository(Article::class)
+                ->findOneBy(['title' => $articleName]);
+
+            if($article !== null) {
+                /** @var Comment[] $comments */
+                $comments = $this
+                    ->getDoctrine()
+                    ->getRepository(Comment::class)
+                    ->findBy(['article' => $article], ['dateAdded' => 'desc']);
+
+                return  $this->render("article/details.html.twig",
+                    ['article' => $article, 'comments' => $comments]);
+            }
+
+        }
+
+        return $this->render("article/missing.html.twig", [
+            'article_name' => $articleName
+        ]);
+    }
+
+    /**
+     * @Route("/allArticles", name="allArticles")
+     * @Route("/Games", name="Games")
+     * @Route("/Hardware", name="Hardware")
+     * @Route("/Phones", name="Phones")
+     * @Route("/Programming", name="Programming")
+     * @Route("/Software", name="Software")
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function articlesByCategory(Request $request)
+    {
+        $categoryChoice = "";
+        if($request->getMethod() == "POST") {
+            $categoryChoice = $request->request->get('categoryChoice');
+        }
+
+        /** @var Article[] $articles */
+        $allArticles = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->getArticlesByCategory($categoryChoice);
+
+        $pagination = new Pagination();
+        $pagination->setTotalRecords($allArticles);
+        $pagination->setLimit(2);
+        $page = $pagination->getCurrentPage();
+
+        /** @var Article[] $articles */
+        $articlesPerPage = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->getArticlesByPage($categoryChoice, $pagination->getLimit(), $pagination->getOffset($page));
+
+        return $this->render("article/allArticles.html.twig",
+            array(
+                'articlesPerPage' => $articlesPerPage,
+                'pages' => $pagination->getTotalPages(),
+                'categoryChoice' => $categoryChoice
+            ));
+    }
+
+    /**
+     * @param $articleId
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/favourite/article/{articleId}", name="add_to_favourites")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")     *
+     */
+    public function addToFavourites($articleId, Request $request)
+    {
+        $arr = array();
+
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        if($currentUser == null) {
+            $arr["message"] = "notLoggedIn";
+
+            return $this->render('security/login.html.twig');
+        }else {
+            $userId = $currentUser->getId();
+
+            $article = $this
+                ->getDoctrine()
+                ->getRepository(User::class)
+                ->getFavouriteArticle($userId, $articleId);
+
+            if(count($article) == 1){
+                $arr["message"] = "alreadyAdded";
+            }else {
+                /** @var Article $article */
+                $article = $this
+                    ->getDoctrine()
+                    ->getRepository(Article::class)
+                    ->find($articleId);
+
+                $currentUser->setFavouriteArticle($article);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($currentUser);
+                $em->flush();
+
+                $arr["message"] = "successful";
+            }
+
+            return new JsonResponse($arr);
+        }
     }
 }
