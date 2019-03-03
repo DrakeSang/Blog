@@ -3,7 +3,9 @@
 namespace BlogBundle\Controller;
 
 use BlogBundle\Entity\Article;
+use BlogBundle\Entity\Category;
 use BlogBundle\Entity\Comment;
+use BlogBundle\Entity\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,21 +21,42 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        $articles = $this
+        $categoryChoice = 'ALL';
+        if(!empty($_GET)){
+            $categoryChoice = $_GET['categoryChoice'];
+        }
+
+        /** @var Category[] $categories */
+        $categories = $this
+            ->getDoctrine()
+            ->getRepository(Category::class)
+            ->findAll();
+
+        /** @var Article[] $articles */
+        $allArticles = $this
             ->getDoctrine()
             ->getRepository(Article::class)
-            ->findBy([], ['viewCount' => 'desc']);
+            ->getArticlesByCategory($categoryChoice);
 
-        $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $articles, /* query NOT result */
-            $request->query->getInt('page', 1)/*page number*/,
-            2/*limit per page*/
-        );
+        $pagination = new Pagination();
+        $pagination->setTotalRecords($allArticles);
+        $pagination->setLimit(2);
+
+        $page = $pagination->getCurrentPage();
+
+        /** @var Article[] $articles */
+        $articlesPerPage = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->getArticlesByPage($categoryChoice, $pagination->getLimit(), $pagination->getOffset($page));
 
         return $this->render('default/index.html.twig',
-            ['pagination' => $pagination]);
+            array(
+                'categories' => $categories,
+                'articlesPerPage' => $articlesPerPage,
+                'pages' => $pagination->getTotalPages(),
+                'categoryChoice' => $categoryChoice
+            ));
     }
 
     /**
@@ -71,5 +94,49 @@ class DefaultController extends Controller
         return $this->render("article/missing.html.twig", [
             'article_name' => $articleName
         ]);
+    }
+
+    /**
+     * @Route("/allArticles", name="allArticles")
+     * @Route("/Games", name="Games")
+     * @Route("/Hardware", name="Hardware")
+     * @Route("/Phones", name="Phones")
+     * @Route("/Programming", name="Programming")
+     * @Route("/Software", name="Software")
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function articlesByCategory(Request $request)
+    {
+        $categoryChoice = "";
+        if($request->getMethod() == "POST") {
+            $categoryChoice = $request->request->get('categoryChoice');
+        }
+
+        /** @var Article[] $articles */
+        $allArticles = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->getArticlesByCategory($categoryChoice);
+
+        $pagination = new Pagination();
+        $pagination->setTotalRecords($allArticles);
+        $pagination->setLimit(2);
+        $page = $pagination->getCurrentPage();
+
+        /** @var Article[] $articles */
+        $articlesPerPage = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->getArticlesByPage($categoryChoice, $pagination->getLimit(), $pagination->getOffset($page));
+
+        return $this->render("article/allArticles.html.twig",
+            array(
+                'articlesPerPage' => $articlesPerPage,
+                'pages' => $pagination->getTotalPages(),
+                'categoryChoice' => $categoryChoice
+            ));
     }
 }

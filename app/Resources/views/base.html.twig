@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="{{ asset('css/comments.css') }}">
         <link rel="stylesheet" href="{{ asset('css/index.css') }}">
         <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+        <script src="{{ asset('js/index/index.js') }}"></script>
         <script>
             setTimeout(function () {
                 $('.msg').fadeOut();
@@ -75,7 +76,7 @@
                                     <div class="form-group">
                                         <input type="text" class="form-control" placeholder="Search" name="article_name">
                 </div>
-                                    <button type="submit" class="btn btn-success">Submit</button>
+                                    <button type="submit" class="btn">Submit</button>
                                 </form>
                             </li>
                         {% else %}
@@ -94,7 +95,7 @@
                                     <div class="form-group">
                                         <input type="text" class="form-control" placeholder="Search" name="article_name">
                                     </div>
-                                    <button type="submit" class="btn btn-success">Submit</button>
+                                    <button type="submit" class="btn">Submit</button>
                                 </form>
                             </li>
                         {% endif %}
