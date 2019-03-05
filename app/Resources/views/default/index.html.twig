@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block main %}
 
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
@@ -45,51 +45,55 @@
             <img src="{{ asset('uploads/images/static/loader.gif') }}" alt="no pic" class="loader">
 
             <div class="main">
-                {% for article in articlesPerPage %}
-                    <article>
-                        <div class="row">
-                            <div class="leftPart">
-                                <a href="{{ path('article_view', {'id': article.id}) }}">
-                                    <img src="{{ asset('uploads/images/articles/' ~ article.image) }}" alt="no pic">
-                                </a>
+                {% if articlesPerPage|length == 0 %}
+                    <p>No articles for that category</p>
+                {% else %}
+                    {% for article in articlesPerPage %}
+                        <article>
+                            <div class="row">
+                                <div class="leftPart">
+                                    <a href="{{ path('article_view', {'id': article.id}) }}">
+                                        <img src="{{ asset('uploads/images/articles/' ~ article.image) }}" alt="no pic">
+                                    </a>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <header>
+                                        <h2>{{ article.title }}</h2>
+                                    </header>
+
+                                    <p>
+                                        {{ article.summary }}
+                                    </p>
+
+                                    <p>Views: {{ article.viewCount }}</p>
+
+                                    <small class="author">
+                                        {{ article.author.fullName }}
+                                    </small>
+
+                                    <footer>
+                                        <div class="pull-right">
+                                            <a class="btn btn-default btn-xs"
+                                               href="{{ path('article_view', {'id': article.id}) }}">Read more &raquo;
+                                            </a>
+
+                                            <a class="btn btn-success btn-xs add_to_favourites"
+                                               href="{{ path('add_to_favourites', {'articleId': article.id}) }}">Add article to favourites. :)
+                                            </a>
+                                        </div>
+                                    </footer>
+                                </div>
                             </div>
-
-                            <div class="col-md-8">
-                                <header>
-                                    <h2>{{ article.title }}</h2>
-                                </header>
-
-                                <p>
-                                    {{ article.summary }}
-                                </p>
-
-                                <p>Views: {{ article.viewCount }}</p>
-
-                                <small class="author">
-                                    {{ article.author.fullName }}
-                                </small>
-
-                                <footer>
-                                    <div class="pull-right">
-                                        <a class="btn btn-default btn-xs"
-                                           href="{{ path('article_view', {'id': article.id}) }}">Read more &raquo;
-                                        </a>
-
-                                        <a class="btn btn-success btn-xs add_to_favourites"
-                                           href="{{ path('add_to_favourites', {'articleId': article.id}) }}">Add article to favourites. :)
-                                        </a>
-                                    </div>
-                                </footer>
-                            </div>
-                        </div>
-                    </article>
-                {% endfor %}
-
-                <div class="pagination">
-                    {% for page in 1..pages %}
-                        <a href="{{ path('blog_index') }}?page={{ page }}&categoryChoice={{ categoryChoice }}">{{ page }}</a>
+                        </article>
                     {% endfor %}
-                </div>
+
+                    <div class="pagination">
+                        {% for page in 1..pages %}
+                            <a href="{{ path('blog_index') }}?page={{ page }}&categoryChoice={{ categoryChoice }}">{{ page }}</a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

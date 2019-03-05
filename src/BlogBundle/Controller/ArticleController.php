@@ -198,6 +198,9 @@ class ArticleController extends Controller
             ->getRepository(Article::class)
             ->find($id);
 
+        $articleFileName = $article->getImage();
+        $articleFilePath = $this->getParameter('article_directory') . "/{$articleFileName}";
+
         /** @var User $currentUser */
         $currentUser = $this->getUser();
 
@@ -213,6 +216,10 @@ class ArticleController extends Controller
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
+            if(file_exists($articleFilePath)) {
+                unlink($articleFilePath);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($article);
             $em->flush();

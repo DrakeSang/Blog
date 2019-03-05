@@ -46,9 +46,9 @@ $(document).ready(function () {
                     location.href = '\\login';
                 } else {
                     if(response["message"] === "alreadyAdded") {
-                        alert('This game was already added to your favourites!');
+                        alert('This article was already added to your favourites!');
                     }else {
-                        alert('The game was successfully added to your favourites!');
+                        alert('The article was successfully added to your favourites!');
                     }
 
                 }

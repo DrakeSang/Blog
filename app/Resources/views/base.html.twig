@@ -25,7 +25,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
 
-<body id="{% block body_id %}{% endblock %}">
+<body>
 
 {% block header %}
     <header>
@@ -45,7 +45,7 @@
                         {% if app.user %}
                             {% if app.user.isAdmin() %}
                                 <li>
-                                    <a href="{{ path('all_users') }}">
+                                    <a href="{{ path('admin_index') }}">
                                         Admin Panel
                                     </a>
                                 </li>
@@ -62,7 +62,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ path('user_profile') }}">
+                                <a href="{{ path('user_profile', {'id': app.user.getId()}) }}">
                                     My Profile
                                 </a>
                             </li>
@@ -107,13 +107,7 @@
 {% endblock %}
 
 <div class="container body-container">
-    {% block body %}
-        <div class="row">
-            <div id="main" class="col-sm-9">
-                {% block main %}{% endblock %}
-            </div>
-        </div>
-    {% endblock %}
+    {% block main %}{% endblock %}
 </div>
 
 {% block footer %}

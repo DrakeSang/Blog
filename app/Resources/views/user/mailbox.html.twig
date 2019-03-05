@@ -4,7 +4,10 @@
 
     {% for message in pagination %}
 
-        <p><a href="{{ path('user_mailbox_current_message', {'id': message.id}) }}">{{ message.sender.email }}</a>
+        <p>
+            <a href="{{ path('send_answer', {'id': message.id}) }}">
+                {{ message.sender.email }}
+            </a>
 
             {% if not message.reader %}
                 <span style="float: right; color: red;">Unread</span>

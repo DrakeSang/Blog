@@ -80,14 +80,14 @@ class User implements UserInterface
     /**
      * @var ArrayCollection|Message[]
      *
-     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Message", mappedBy="sender")
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Message", mappedBy="sender", cascade={"remove"})
      */
     private $senders;
 
     /**
      * @var ArrayCollection|Message[]
      *
-     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Message", mappedBy="recipient")
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Message", mappedBy="recipient", cascade={"remove"})
      */
     private $recipients;
 

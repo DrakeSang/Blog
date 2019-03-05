@@ -87,7 +87,7 @@ class Article
     /**
      * @var Category
      *
-     * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Category", inversedBy="articles", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Category", inversedBy="articles")
      */
     private $category;
 

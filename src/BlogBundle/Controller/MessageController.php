@@ -98,7 +98,7 @@ class MessageController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      *
-     * @Route("/user/mailbox/message/{id}", name="user_mailbox_current_message")
+     * @Route("/user/mailbox/message/{id}", name="send_answer")
      */
     public function messageAction(Request $request, $id)
     {

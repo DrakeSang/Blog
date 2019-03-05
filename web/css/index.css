@@ -59,6 +59,7 @@
 @media only screen and (min-width: 992px) {
     .leftPart {
         width: 33.3%;
+        height: 260px;
         position: relative;
     }
 

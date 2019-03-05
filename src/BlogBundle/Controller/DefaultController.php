@@ -15,13 +15,12 @@ class DefaultController extends Controller
     /**
      * @Route("/", name="blog_index")
      *
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $categoryChoice = 'ALL';
+
         if(!empty($_GET)){
             $categoryChoice = $_GET['categoryChoice'];
         }
