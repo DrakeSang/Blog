@@ -27,56 +27,91 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        $errorMessages = array();
+        $errorMessages['email'] = '';
+        $errorMessages['fullName'] = '';
+        $errorMessages['password'] = '';
+        $errorMessages['image'] = '';
+
+        $data = array();
+        $data['email'] = '';
+        $data['fullName'] = '';
+        $data['password'] = '';
+        $data['repeatedPassword'] = '';
+        $data['image'] = '';
+
+        if($form->isSubmitted()) {
             $email = $form->getData()->getEmail();
+            $fullName = $form->getData()->getFullName();
+            $userPasswords = $request->request->get('user')['password'];
+            $password = $userPasswords['first'];
+            $repeatedPassword = $userPasswords['second'];
 
-            $userDB = $this
-                ->getDoctrine()
-                ->getRepository(User::class)
-                ->findOneBy(['email' => $email]);
+            foreach ($form->all() as $child) {
+                $fieldName = $child->getName();
+                $fieldErrors = $form->get($child->getName())->getErrors(true);
 
-            if(null !== $userDB) {
-                $this->addFlash('info', "Username with email " . $email . " already taken!");
-
-                return $this->render('user/register.html.twig', [
-                    'form' => $form->createView()
-                ]);
+                foreach ($fieldErrors as $fieldError){
+                    $errorMessages[$fieldName] = $fieldError->getMessage();
+                }
             }
 
-            $password = $this->get('security.password_encoder')
-                ->encodePassword($user, $user->getPassword());
+            $data['email'] = $email;
+            $data['fullName'] = $fullName;
+            $data['password'] = $password;
+            $data['repeatedPassword'] = $repeatedPassword;
 
-            /** @var Role $role */
-            $role = $this
+            if(count($data) == 0) {
+                $userDB = $this
+                    ->getDoctrine()
+                    ->getRepository(User::class)
+                    ->findOneBy(['email' => $email]);
+
+                if(null !== $userDB) {
+                    $this->addFlash('info', "Username with email " . $email . " already taken!");
+
+                    return $this->render('user/register.html.twig', [
+                        'form' => $form->createView()
+                    ]);
+                }
+
+                $password = $this->get('security.password_encoder')
+                    ->encodePassword($user, $user->getPassword());
+
+                /** @var Role $role */
+                $role = $this
                     ->getDoctrine()
                     ->getRepository(Role::class)
                     ->findOneBy(['name' => 'ROLE_USER']);
 
-            $user->setPassword($password);
-            $user->addRole($role);
+                $user->setPassword($password);
+                $user->addRole($role);
 
-            /** @var UploadedFile $file */
-            $file = $form->getData()->getImage();
-            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+                /** @var UploadedFile $file */
+                $file = $form->getData()->getImage();
+                $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
-            try{
-                $file->move($this->getParameter('user_directory'),
-                    $fileName);
-            }catch (FileException $exception){
+                try{
+                    $file->move($this->getParameter('user_directory'),
+                        $fileName);
+                }catch (FileException $exception){
 
+                }
+
+                $user->setImage($fileName);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+
+                return $this->redirectToRoute("security_login");
             }
-
-            $user->setImage($fileName);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            return $this->redirectToRoute("security_login");
         }
 
         return $this->render('user/register.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'data' => $data,
+            'errorMessages' => $errorMessages
         ]);
     }
 

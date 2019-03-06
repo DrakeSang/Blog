@@ -12,10 +12,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use BlogBundle\Entity\Pagination;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Validation;
 
 class ArticleController extends Controller
 {
@@ -41,35 +43,84 @@ class ArticleController extends Controller
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            /** @var User $currentUser */
-            $currentUser = $this->getUser();
+        $formData = array();
+        $errorMessages = array();
 
-            $article->setAuthor($currentUser);
-            $currentUser->addPost($article);
+        $errorMessages['title'] = '';
+        $errorMessages['content'] = '';
+        $errorMessages['image'] = '';
 
-            /** @var UploadedFile $file */
-            $file = $form->getData()->getImage();
-            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+        $formData['title'] = '';
+        $formData['content'] = '';
 
-            try{
-                $file->move($this->getParameter('article_directory'),
-                    $fileName);
-            }catch (FileException $exception){
+        if($form->isSubmitted()){
+            $data = $form->getData();
 
+            $title = $data->getTitle();
+            $content = $data->getContent();
+
+            $titleErrors = $this
+                ->get('validator')
+                ->validatePropertyValue($article, 'title', $data->getTitle());
+
+            $contentErrors = $this
+                ->get('validator')
+                ->validatePropertyValue($article, 'content', $data->getContent());
+
+            $imageErrors = $this
+                ->get('validator')
+                ->validatePropertyValue($article, 'image', $data->getImage());
+
+            $formData['title'] = $title;
+            $formData['content'] = $content;
+
+            if(count($titleErrors) > 0 || count($contentErrors) > 0 || count($imageErrors) > 0) {
+                foreach ($titleErrors as $violation) {
+                    $errorMessages[$violation->getPropertyPath()] = $violation->getMessage();
+                }
+
+                foreach ($contentErrors as $violation) {
+                    $errorMessages[$violation->getPropertyPath()] = $violation->getMessage();
+                }
+
+                foreach ($imageErrors as $violation) {
+                    $errorMessages[$violation->getPropertyPath()] = $violation->getMessage();
+                }
+            } else {
+                /** @var User $currentUser */
+                $currentUser = $this->getUser();
+
+                $article->setAuthor($currentUser);
+                $currentUser->addPost($article);
+
+                /** @var UploadedFile $file */
+                $file = $form->getData()->getImage();
+                $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
+                try{
+                    $file->move($this->getParameter('article_directory'),
+                        $fileName);
+                }catch (FileException $exception){
+
+                }
+
+                $article->setImage($fileName);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($article);
+                $em->flush();
+
+                return $this->redirectToRoute("blog_index");
             }
-
-            $article->setImage($fileName);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($article);
-            $em->flush();
-
-            return $this->redirectToRoute("blog_index");
         }
 
         return $this->render('article/create.html.twig',
-            array('form' => $form->createView(), 'categories' => $categories));
+            array(
+                'form' => $form->createView(),
+                'categories' => $categories,
+                'formData' => $formData,
+                'errorMessages' => $errorMessages
+            ));
     }
 
     /**
