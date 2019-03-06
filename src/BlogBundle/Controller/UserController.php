@@ -2,6 +2,7 @@
 
 namespace BlogBundle\Controller;
 
+use BlogBundle\Entity\Comment;
 use BlogBundle\Entity\Message;
 use BlogBundle\Entity\Role;
 use BlogBundle\Entity\Article;
@@ -27,18 +28,17 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        $errorMessages = array();
-        $errorMessages['email'] = '';
-        $errorMessages['fullName'] = '';
-        $errorMessages['password'] = '';
-        $errorMessages['image'] = '';
-
         $data = array();
         $data['email'] = '';
         $data['fullName'] = '';
         $data['password'] = '';
         $data['repeatedPassword'] = '';
         $data['image'] = '';
+
+        $data['email_error'] = '';
+        $data['fullName_error'] = '';
+        $data['password_error'] = '';
+        $data['image_error'] = '';
 
         if($form->isSubmitted()) {
             $email = $form->getData()->getEmail();
@@ -47,21 +47,21 @@ class UserController extends Controller
             $password = $userPasswords['first'];
             $repeatedPassword = $userPasswords['second'];
 
-            foreach ($form->all() as $child) {
-                $fieldName = $child->getName();
-                $fieldErrors = $form->get($child->getName())->getErrors(true);
-
-                foreach ($fieldErrors as $fieldError){
-                    $errorMessages[$fieldName] = $fieldError->getMessage();
-                }
-            }
-
             $data['email'] = $email;
             $data['fullName'] = $fullName;
             $data['password'] = $password;
             $data['repeatedPassword'] = $repeatedPassword;
 
-            if(count($data) == 0) {
+            foreach ($form->all() as $child) {
+                $fieldName = $child->getName();
+                $fieldErrors = $form->get($child->getName())->getErrors(true);
+
+                foreach ($fieldErrors as $fieldError){
+                    $data[$fieldName . '_error'] = $fieldError->getMessage();
+                }
+            }
+
+            if($data['email_error'] = '' && $data['fullName_error'] = ''&& $data['password_error'] = '' && $data['image_error'] = '') {
                 $userDB = $this
                     ->getDoctrine()
                     ->getRepository(User::class)
@@ -110,8 +110,7 @@ class UserController extends Controller
 
         return $this->render('user/register.html.twig', [
             'form' => $form->createView(),
-            'data' => $data,
-            'errorMessages' => $errorMessages
+            'data' => $data
         ]);
     }
 
@@ -193,9 +192,24 @@ class UserController extends Controller
 
         $countMsg = count($unreadMessages);
 
+        /** @var Article[] $favouritesArticles */
+        $favouritesArticles = $user->getFavouriteArticles();
+
+        /** @var User[] $allUsers */
+        $allUsers = $this
+            ->getDoctrine()
+            ->getRepository(User::class)
+            ->findAll();
+
+        /** @var Comment[] $allComments */
+        $allComments = $user->getComments();
+
         return $this->render("user/profile.html.twig", [
             'user' => $user,
-            'countMsg' => $countMsg
+            'countMsg' => $countMsg,
+            'favouriteArticles' => $favouritesArticles,
+            'users' => $allUsers,
+            'comments' => $allComments
         ]);
     }
 }

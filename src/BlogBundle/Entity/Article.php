@@ -27,8 +27,6 @@ class Article
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Length(min=5, minMessage="Title must be at least 5 characters long",max=20, maxMessage="Title must not be longer than 255 characters")
      */
     private $title;
 
@@ -36,8 +34,6 @@ class Article
      * @var string
      *
      * @ORM\Column(name="content", type="text")
-     * @Assert\NotBlank()
-     * @Assert\Length(min=10, minMessage="Content must be at least 10 characters long",max=255, maxMessage="Content must not be longer than 255 characters")
      */
     private $content;
 
@@ -72,15 +68,6 @@ class Article
      * @var string
      *
      * @ORM\Column(name="image", type="string", nullable=false)
-     * @Assert\NotBlank()
-     * * @Assert\File(
-     *     maxSize = "5M",
-     *     mimeTypes = {
-     *         "image/jpeg",
-     *         "image/jpg",
-     *         "image/png",
-     *     }
-     * )
      */
     private $image;
 

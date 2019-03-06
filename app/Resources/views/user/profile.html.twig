@@ -2,12 +2,108 @@
 
 {% block main %}
 
-    <h1>Hello, {{ user.fullName }} </h1>
+    <h1 style="text-align: center;">Welcome, to your profile {{ user.fullName }}! :) </h1>
 
-    <h2>Click to check your mail
+    <h2 style="text-align: center;">Click to check your mail
         <a href="{{ path('user_mailbox') }}">
             <span class="glyphicon glyphicon-envelope">({{ countMsg }})</span>
         </a>
     </h2>
+
+    <div class="row">
+        <div style="width: 100%;">
+            <div>
+                <h3 style="text-align: center;">All Favourite Articles</h3>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Author</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for article in favouriteArticles %}
+                    <tr>
+                        <td>{{ article.id }}</td>
+                        <td>{{ article.title }}</td>
+                        <td>{{ article.author.fullName }}</td>
+                        <td>{{ article.dateAdded|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</td>
+                        <td>{{ article.category.name }}</td>
+                        <td>
+                            <a class="btn btn-success btn-xs" href="{{ path('article_view', {'id': article.id} ) }}">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div style="width: 100%;">
+            <div>
+                <h3 style="text-align: center;">All Users</h3>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>FullName</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.fullName }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <a class="btn btn-success btn-xs" href="{{ path('add_message', {'id': user.id} ) }}">
+                                Send Message
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div style="width: 100%;">
+            <div>
+                <h3 style="text-align: center;">My Comments</h3>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Content</th>
+                    <th>Date Added</th>
+                    <th>Article Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for comment in comments %}
+                    <tr>
+                        <td>{{ comment.id }}</td>
+                        <td>{{ comment.content }}</td>
+                        <td>{{ comment.dateAdded|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</td>
+                        <td>{{ comment.article.title }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 {% endblock %}

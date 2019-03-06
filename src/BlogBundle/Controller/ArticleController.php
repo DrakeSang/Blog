@@ -43,50 +43,33 @@ class ArticleController extends Controller
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
-        $formData = array();
-        $errorMessages = array();
+        $data = array();
 
-        $errorMessages['title'] = '';
-        $errorMessages['content'] = '';
-        $errorMessages['image'] = '';
+        $data['title'] = '';
+        $data['content'] = '';
+        $data['image'] = '';
 
-        $formData['title'] = '';
-        $formData['content'] = '';
+        $data['title_error'] = '';
+        $data['content_error'] = '';
+        $data['image_error'] = '';
 
         if($form->isSubmitted()){
-            $data = $form->getData();
+            $title = $form->getData()->getTitle();
+            $content = $form->getData()->getContent();
 
-            $title = $data->getTitle();
-            $content = $data->getContent();
+            $data['title'] = $title;
+            $data['content'] = $content;
 
-            $titleErrors = $this
-                ->get('validator')
-                ->validatePropertyValue($article, 'title', $data->getTitle());
+            foreach ($form->all() as $child) {
+                $fieldName = $child->getName();
+                $fieldErrors = $form->get($child->getName())->getErrors(true);
 
-            $contentErrors = $this
-                ->get('validator')
-                ->validatePropertyValue($article, 'content', $data->getContent());
-
-            $imageErrors = $this
-                ->get('validator')
-                ->validatePropertyValue($article, 'image', $data->getImage());
-
-            $formData['title'] = $title;
-            $formData['content'] = $content;
-
-            if(count($titleErrors) > 0 || count($contentErrors) > 0 || count($imageErrors) > 0) {
-                foreach ($titleErrors as $violation) {
-                    $errorMessages[$violation->getPropertyPath()] = $violation->getMessage();
+                foreach ($fieldErrors as $fieldError){
+                    $data[$fieldName . '_error'] = $fieldError->getMessage();
                 }
+            }
 
-                foreach ($contentErrors as $violation) {
-                    $errorMessages[$violation->getPropertyPath()] = $violation->getMessage();
-                }
-
-                foreach ($imageErrors as $violation) {
-                    $errorMessages[$violation->getPropertyPath()] = $violation->getMessage();
-                }
-            } else {
+            if($data['title_error'] == '' && $data['content_error'] == '' && $data['image_error'] == '') {
                 /** @var User $currentUser */
                 $currentUser = $this->getUser();
 
@@ -118,8 +101,7 @@ class ArticleController extends Controller
             array(
                 'form' => $form->createView(),
                 'categories' => $categories,
-                'formData' => $formData,
-                'errorMessages' => $errorMessages
+                'data' => $data
             ));
     }
 
