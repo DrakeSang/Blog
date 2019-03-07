@@ -21,4 +21,13 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getAllUsersExceptLogged(int $id)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.id != :user_id')
+            ->setParameter('user_id', $id)
+            ->getQuery()
+            ->getResult();
+    }
 }

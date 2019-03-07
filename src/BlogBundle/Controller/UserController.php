@@ -199,7 +199,7 @@ class UserController extends Controller
         $allUsers = $this
             ->getDoctrine()
             ->getRepository(User::class)
-            ->findAll();
+            ->getAllUsersExceptLogged($id);
 
         /** @var Comment[] $allComments */
         $allComments = $user->getComments();

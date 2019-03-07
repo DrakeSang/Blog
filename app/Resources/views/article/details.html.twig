@@ -30,9 +30,10 @@
                                 <div class="top_part">
                                     <img src="{{ asset('uploads/images/users/' ~ comment.author.image) }}" alt="no pic">
                                     <div class="user_info">
-                                        <a href="{{ path('add_message', {'id': comment.author.id}) }}">
-                                            <p>{{ comment.author.fullName }}</p>
-                                        </a>
+                                        {#<a href="{{ path('add_message', {'id': comment.author.id}) }}">#}
+                                            {#<p>{{ comment.author.fullName }}</p>#}
+                                        {#</a>#}
+                                        <p>{{ comment.author.fullName }}</p>
                                         <p>{{ comment.author.email }}</p>
                                     </div>
                                 </div>
